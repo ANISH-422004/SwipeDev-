@@ -1,4 +1,5 @@
 const { body } = require("express-validator");
+const userModel = require("../models/user.model");
 
 exports.validateUserSignup = [
   body("firstName")
@@ -42,4 +43,24 @@ module.exports.normalizeSkills = function(req, res, next) {
     }
   }
   next();
+}
+
+
+module.exports.authMe = async (req, res , next) => {
+  try{
+      const token = req.header("Authorization")?.split(" ")[1]
+      if(!token) return res.status(401).json({message: "Unauthorized"})
+      const isVerifiedToken = await userModel.verifyToken(token)
+      if(!isVerifiedToken) return res.status(401).json({message: "Unauthorized"})
+        const user = await userModel.findById(isVerifiedToken.id).select("-password -__v")
+      if(!user) return res.status(404).json({message: "User not found"})
+
+      req.user = user
+      
+          
+      next()
+  }catch(err){
+      console.error(err)
+      return res.status(500).json({message: "Internal Server Error"})
+  }
 }

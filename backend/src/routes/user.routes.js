@@ -18,7 +18,7 @@ router.post(
     userMiddleware.validateUserLogin,
     userController.loginUser
   );
-  
-// router.get("/profile", authMiddleware, userController.getUserProfile); // Example with auth
+
+router.get("/profile", userMiddleware.authMe, userController.getUserProfile); // Example with auth
 
 module.exports = router;

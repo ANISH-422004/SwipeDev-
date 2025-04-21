@@ -38,8 +38,6 @@ exports.signupUser = async (req, res) => {
   }
 };
 
-
-
 exports.loginUser = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -56,3 +54,16 @@ exports.loginUser = async (req, res) => {
     res.status(401).json({ message: error.message });
   }
 };
+
+module.exports.getUserProfile = async (req, res) => {
+    try {
+        const user = req.user; // Assuming user is set in auth middleware
+        if (!user) {
+        return res.status(404).json({ message: "User not found" });
+        }
+        res.status(200).json({ user });
+    } catch (error) {
+        console.error("Error fetching user profile:", error.message);
+        res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
+}
