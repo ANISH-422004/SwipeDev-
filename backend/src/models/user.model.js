@@ -1,40 +1,76 @@
 const mongoose = require('mongoose');
 
+// Email Regex for validation
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const userSchema = new mongoose.Schema({
     firstName: {
         type: String,
-        required: true,
+        required: [true, 'First name is required'],
+        trim: true,
+        minlength: [2, 'First name must be at least 2 characters long'],
+        maxlength: [50, 'First name can be up to 50 characters'],
     },
     lastName: {
         type: String,
-        required: true,
+        required: [true, 'Last name is required'],
+        trim: true,
+        minlength: [2, 'Last name must be at least 2 characters long'],
+        maxlength: [50, 'Last name can be up to 50 characters'],
     },
-    emial: {
+    email: {
         type: String,
-        required: true,
+        required: [true, 'Email is required'],
         unique: true,
+        lowercase: true,
+        trim: true,
+        validate: {
+            validator: (v) => emailRegex.test(v),
+            message: (props) => `${props.value} is not a valid email!`,
+        },
     },
     password: {
         type: String,
-        required: true,
+        required: [true, 'Password is required'],
+        trim: true,
+        minlength: [8, 'Password must be at least 8 characters long'],
+        select: false, // Hides password by default when querying
     },
     age: {
         type: Number,
-        required: true,
+        required: [true, 'Age is required'],
+        min: [18, 'You must be at least 18 years old'],
+        max: [100, 'Age cannot exceed 100'],
     },
-    gender : {
+    gender: {
         type: String,
-        enum : ["male" , "female" , "other"],
-        required: true,
+        enum: {
+            values: ['male', 'female', 'other'],
+            message: '{VALUE} is not a valid gender',
+        },
+        required: [true, 'Gender is required'],
+    },
+    profilePic: {
+        type: String,
+        default:
+            "https://tamilnaducouncil.ac.in/wp-content/uploads/2020/04/dummy-avatar.jpg" 
+    },
+    skills: {
+        type: [String],
+        validate: {
+            validator: (arr) => arr.every(skill => typeof skill === 'string' && skill.length <= 50),
+            message: 'Each skill must be a string of max 50 characters',
+        },
+        default: [],
+    },
+    about: {
+        type: String,
+        trim: true,
+        maxlength: [500, 'About section can be up to 500 characters'],
+        default: "Hello, I am a new user!",
     },
 
+}, {
+    timestamps: true,
 
-
-})
-
-
-
-
-const userModel = mongoose.model('User', userSchema);
-module.exports = userModel;
+});
