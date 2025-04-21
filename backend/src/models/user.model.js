@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 // Email Regex for validation
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -53,13 +54,22 @@ const userSchema = new mongoose.Schema({
     profilePic: {
         type: String,
         default:
-            "https://tamilnaducouncil.ac.in/wp-content/uploads/2020/04/dummy-avatar.jpg" 
+            "https://tamilnaducouncil.ac.in/wp-content/uploads/2020/04/dummy-avatar.jpg"
+    },
+    profilePicFileId: {
+        type: String,
+        default: "",
     },
     skills: {
         type: [String],
         validate: {
             validator: (arr) => arr.every(skill => typeof skill === 'string' && skill.length <= 50),
             message: 'Each skill must be a string of max 50 characters',
+        },
+        validate(arr) {
+            if (arr.length > 10) {
+                throw new Error('You can only have up to 10 skills');
+            }
         },
         default: [],
     },
@@ -74,3 +84,35 @@ const userSchema = new mongoose.Schema({
     timestamps: true,
 
 });
+
+
+
+// 🔒 Middleware: Hash password before saving
+userSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+    this.password = await bcrypt.hash(this.password, 10);
+    next();
+});
+
+// ⚙️ Method: Check password
+userSchema.methods.comparePassword = function (enteredPassword) {
+    return bcrypt.compare(enteredPassword, this.password);
+};
+
+// 🔐 Method: Generate token
+userSchema.methods.generateAuthToken = function () {
+    return jwt.sign(
+        { id: this._id, email: this.email },
+        process.env.JWT_SECRET,
+        { expiresIn: "7d" }
+    );
+};
+
+//verify token
+userSchema.statics.verifyToken = function (token) {
+    return jwt.verify(token, process.env.JWT_SECRET);
+};
+
+
+const userModel = mongoose.model("User", userSchema);
+module.exports = userModel;

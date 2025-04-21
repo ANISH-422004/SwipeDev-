@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
-
+const userRoutes = require('./routes/user.routes');
 
 
 //middleware
@@ -13,6 +13,7 @@ app.use(morgan('dev'));
 
 
 //routes
+app.use('/api/v1/users', userRoutes);
 
 
 
