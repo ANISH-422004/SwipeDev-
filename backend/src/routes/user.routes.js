@@ -13,8 +13,12 @@ router.post(
   );
   
 
-// Add other user routes here (login, get profile, update profile etc.)
-// router.post("/login", userController.loginUser);
+  router.post(
+    "/login",
+    userMiddleware.validateUserLogin,
+    userController.loginUser
+  );
+  
 // router.get("/profile", authMiddleware, userController.getUserProfile); // Example with auth
 
 module.exports = router;

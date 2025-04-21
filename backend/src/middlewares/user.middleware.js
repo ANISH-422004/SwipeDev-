@@ -25,6 +25,12 @@ exports.validateUserSignup = [
     }),
 ];
 
+exports.validateUserLogin = [
+  body("email")
+    .isEmail().withMessage("Enter a valid email"),
+  body("password")
+    .isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
+];
 
 // In a middleware before validation
 module.exports.normalizeSkills = function(req, res, next) {

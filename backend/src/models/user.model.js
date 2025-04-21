@@ -35,7 +35,6 @@ const userSchema = new mongoose.Schema({
         required: [true, 'Password is required'],
         trim: true,
         minlength: [8, 'Password must be at least 8 characters long'],
-        select: false, // Hides password by default when querying
     },
     age: {
         type: Number,
@@ -95,9 +94,10 @@ userSchema.pre("save", async function (next) {
 });
 
 // ⚙️ Method: Check password
-userSchema.methods.comparePassword = function (enteredPassword) {
-    return bcrypt.compare(enteredPassword, this.password);
-};
+userSchema.methods.comparePassword = async function (inputPassword) {
+    console.log(inputPassword, this.password)
+    return await bcrypt.compare(inputPassword, this.password);
+  };
 
 // 🔐 Method: Generate token
 userSchema.methods.generateAuthToken = function () {

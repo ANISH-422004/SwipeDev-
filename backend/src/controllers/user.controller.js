@@ -1,7 +1,13 @@
-const { createuser } = require("../services/userService");
+const { validationResult  } = require("express-validator");
+const { createuser , loginUser } = require("../services/userService");
 
 exports.signupUser = async (req, res) => {
   try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ message: "Validation failed", errors: errors.array() });
+    }
+
     const { firstName, lastName, email, password, age, gender, skills, about } = req.body;
 
     console.log("Profile picture file found, attempting upload...");
@@ -29,5 +35,24 @@ exports.signupUser = async (req, res) => {
     console.error("Error during user signup:", error.message);
     // Optionally handle image cleanup if failure
     res.status(500).json({ message: "Internal Server Error", error: error.message });
+  }
+};
+
+
+
+exports.loginUser = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: "Validation failed", errors: errors.array() });
+  }
+
+  const { email, password } = req.body;
+
+  try {
+    const { user, token } = await loginUser(email, password);
+    res.status(200).json({ message: "Login successful", user, token });
+  } catch (error) {
+    console.error("Login error:", error.message);
+    res.status(401).json({ message: error.message });
   }
 };
