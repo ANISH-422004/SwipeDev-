@@ -4,13 +4,11 @@ const router = require('express').Router();
 
 
 //send connection request to a user
-router.post("/send/:status/:toUserId", authMe , requestController.sendConnectionRequestController)
+router.post("/send/:status/:toUserId", authMe, requestController.sendConnectionRequestController)
 
 
 //for responding to a connection request
-router.post("/review/:requestId/:status", authMe , async (req, res) => {
-
-})
+router.post("/review/:status/:requestId", authMe, requestController.respondToConnectionRequestController)
 
 
 
