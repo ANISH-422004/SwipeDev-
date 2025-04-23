@@ -68,3 +68,12 @@ exports.updateUser = async (userId, updateData, uploadedImageData = null) => {
 
   return userResponse;
 }
+
+
+// Delete user
+exports.deleteUser = async (userId) => {
+  const deletedUser = await userModel.findByIdAndDelete(userId);
+  if (!deletedUser) throw new Error("User deletion failed");
+
+  return deletedUser;
+}

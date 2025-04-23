@@ -1,6 +1,6 @@
 const { deleteImage, uploadBufferStream } = require("../utils/imagekit");
 const { validationResult  } = require("express-validator");
-const { createuser , loginUser, updateUser } = require("../services/userService");
+const { createuser , loginUser, updateUser, deleteUser } = require("../services/userService");
 
 exports.signupUser = async (req, res) => {
   try {
@@ -106,5 +106,25 @@ module.exports.updateUser = async (req, res) => {
   } catch (err) {
     console.error("Error updating user:", err);
     res.status(500).json({ message: "Internal Server Error", error: err.message });
+  }
+};
+
+module.exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.user._id; 
+
+    // Delete the user's profile picture from ImageKit if it exists
+    if (req.user.profilePicFileId) {
+      await deleteImage(req.user.profilePicFileId);
+      console.log("Deleted image from ImageKit:", req.user.profilePicFileId);
+    }
+
+    // Delete the user from the database
+    const deletedUser = await deleteUser(userId); 
+
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error.message);
+    res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };

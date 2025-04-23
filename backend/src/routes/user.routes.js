@@ -28,6 +28,13 @@ router.put(
   userController.updateUser
 );
 
+//Delete User Route
+router.delete(
+  "/delete",
+  userMiddleware.authMe,
+  userController.deleteUser
+);
+
 router.get("/profile", userMiddleware.authMe, userController.getUserProfile);
 
 module.exports = router;
