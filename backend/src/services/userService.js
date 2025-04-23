@@ -84,3 +84,10 @@ exports.getAllUsers = async () => {
   const users = await userModel.find().select("-password -__v"); // Exclude password and __v field
   return users;
 } 
+
+// find user by email
+exports.findUserByEmail = async (email) => {
+  const user = await userModel.findOne({ email });
+  if (!user) throw new Error("User not found");
+  return user;
+}

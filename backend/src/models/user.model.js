@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const config = require('../config/config');
 // Email Regex for validation
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -103,7 +104,7 @@ userSchema.methods.comparePassword = async function (inputPassword) {
 userSchema.methods.generateAuthToken = function () {
     return jwt.sign(
         { id: this._id, email: this.email },
-        process.env.JWT_SECRET,
+        config.JWT_SECRET,
         { expiresIn: "7d" }
     );
 };
@@ -111,6 +112,16 @@ userSchema.methods.generateAuthToken = function () {
 //verify token
 userSchema.statics.verifyToken = function (token) {
     return jwt.verify(token, process.env.JWT_SECRET);
+};
+
+// 🔒 Method: Generate password reset token
+userSchema.methods.generatePasswordResetToken = function () {
+    const resetToken = jwt.sign(
+        { id: this._id, email: this.email },
+        config.JWT_SECRET,
+        { expiresIn: "1h" }
+    );
+    return resetToken;
 };
 
 

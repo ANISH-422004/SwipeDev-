@@ -12,7 +12,7 @@ router.get("/all", userMiddleware.authMe, userController.getAllUsers);
 
 
 // Update User Route
-router.put(
+router.patch(
   "/update",
   userMiddleware.authMe,
   upload.single("profilePic"),
@@ -25,6 +25,19 @@ router.delete(
   "/delete",
   userMiddleware.authMe,
   userController.deleteUser
+);
+
+//forgot password route
+router.post(
+  "/forgot-password",
+  userMiddleware.authMe,
+  userController.forgotPassword
+);
+
+//reset password route
+router.post(
+  "/reset-password",
+  userController.resetPassword
 );
 
 
