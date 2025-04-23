@@ -53,9 +53,23 @@ module.exports.getAllConnectionController = async (req, res) => {
 
 module.exports.getUserFeedController = async (req, res) => {
     try {
+        //sanitize the query params for huge limit and page 
+        // Validate and parse the limit and page parameters
+
+        let limit = parseInt(req.query.limit) || 10; // Default limit to 10 if not provided
+        if (limit > 50) {
+            limit = 50; // Cap the limit to a maximum of 50
+        }
+        if (limit < 1) {
+            limit = 1; // Ensure the limit is at least 1
+        }
+        const page = parseInt(req.query.page) || 1; // Default page to 1 if not provided
+        const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
         const loggedInUser = req.user;
 
-        const users = await getSuggestedUsersForFeed(loggedInUser._id);
+        const users = await getSuggestedUsersForFeed(loggedInUser._id, skip, limit);
+
 
         return res.status(200).json({
             message: 'User feed fetched successfully',

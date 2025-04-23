@@ -94,9 +94,7 @@ exports.findUserByEmail = async (email) => {
 }
 
 //get suggested user for feed
-module.exports.getSuggestedUsersForFeed = async (loggedInUserId) => {
-  const SAFE_USER_SELECT = "-password -__v -createdAt -updatedAt -profilePicFileId";
-
+module.exports.getSuggestedUsersForFeed = async (loggedInUserId, skip = 0, limit = 10) => {
   // Step 1: Find all sent/received connection requests involving the user
   const connections = await connectionRequestModel.find({
       $or: [
@@ -105,7 +103,7 @@ module.exports.getSuggestedUsersForFeed = async (loggedInUserId) => {
       ]
   });
 
-  // Step 2: Build a Set of user IDs to exclude from the feed
+  // Step 2: Build a Set of user IDs to exclude
   const userToHide = new Set();
   connections.forEach((item) => {
       const otherUserId = item.senderId.toString() === loggedInUserId.toString()
@@ -114,12 +112,14 @@ module.exports.getSuggestedUsersForFeed = async (loggedInUserId) => {
       userToHide.add(otherUserId);
   });
 
-  // Step 3: Query users not in the block list and not the current user
+  // Step 3: Query users with pagination
   const users = await userModel.find({
       _id: {
           $nin: [loggedInUserId, ...userToHide]
       }
-  }).select(SAFE_USER_SELECT)
+  })
+  .skip(skip)
+  .limit(limit);
 
   return users;
 };
