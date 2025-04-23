@@ -1,5 +1,5 @@
 const { createuser, loginUser } = require("../services/userService");
-const { uploadBufferStream } = require("../utils/imagekit");
+const { uploadBufferStream, deleteImage } = require("../utils/imagekit");
 const { validationResult } = require("express-validator");
 
 
