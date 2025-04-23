@@ -53,3 +53,18 @@ exports.loginUser = async (email, password) => {
 
   return { user: userResponse, token };
 };
+
+
+// Update user
+exports.updateUser = async (userId, updateData, uploadedImageData = null) => {
+
+
+  const updatedUser = await userModel.findByIdAndUpdate(userId, updateData, { new: true });
+  if (!updatedUser) throw new Error("User update failed");
+
+  const userResponse = updatedUser.toObject();
+  delete userResponse.password;
+  delete userResponse.__v;
+
+  return userResponse;
+}

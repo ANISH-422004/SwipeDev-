@@ -1,5 +1,6 @@
+const { deleteImage, uploadBufferStream } = require("../utils/imagekit");
 const { validationResult  } = require("express-validator");
-const { createuser , loginUser } = require("../services/userService");
+const { createuser , loginUser, updateUser } = require("../services/userService");
 
 exports.signupUser = async (req, res) => {
   try {
@@ -15,6 +16,7 @@ exports.signupUser = async (req, res) => {
     let uploadedImageData = null;
     if (req.file) {
       const { uploadBufferStream } = require("../utils/imagekit");
+const { updateUser } = require("../services/userService");
       uploadedImageData = await uploadBufferStream(req.file.buffer, req.file.originalname);
       console.log("Image uploaded successfully:", uploadedImageData.url);
     }
@@ -34,6 +36,9 @@ exports.signupUser = async (req, res) => {
   } catch (error) {
     console.error("Error during user signup:", error.message);
     // Optionally handle image cleanup if failure
+    if (req.file) {
+      await deleteImage(req.file.filename); 
+    }
     res.status(500).json({ message: "Internal Server Error", error: error.message });
   }
 };
@@ -67,3 +72,39 @@ module.exports.getUserProfile = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error", error: error.message });
     }
 }
+
+module.exports.updateUser = async (req, res) => {
+  try {
+    const { firstName, lastName, email, password, age, gender, skills, about } = req.body;
+    const userId = req.user._id; 
+
+    const updates = {};
+    if (firstName) updates.firstName = firstName;
+    if (lastName) updates.lastName = lastName;
+    if (email) updates.email = email;
+    if (password) updates.password = password; 
+    if (age) updates.age = age;
+    if (gender) updates.gender = gender;
+    if (skills) updates.skills = skills;
+    if (about) updates.about = about;
+
+    let uploadedImageData = null;
+    if (req.file) {
+      //remove the previous image if exists form imageKit
+      if (req.user.profilePicFileId) {
+        await deleteImage(req.user.profilePicFileId); // Delete the old image from ImageKit
+        console.log("Deleted old image from ImageKit:", req.user.profilePicFileId);
+      }
+
+      uploadedImageData = await uploadBufferStream(req.file.buffer, req.file.originalname);
+      updates.profilePic = uploadedImageData.url;
+    }
+
+    const updatedUser = await updateUser(userId, updates);
+
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+  } catch (err) {
+    console.error("Error updating user:", err);
+    res.status(500).json({ message: "Internal Server Error", error: err.message });
+  }
+};

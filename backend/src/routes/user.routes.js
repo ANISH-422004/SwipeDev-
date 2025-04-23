@@ -5,20 +5,29 @@ const userMiddleware = require('../middlewares/user.middleware'); // Validation 
 
 // Signup Route
 router.post(
-    "/signup",
-    upload.single("profilePic"),
-    userMiddleware.normalizeSkills, 
-    userMiddleware.validateUserSignup,
-    userController.signupUser
-  );
-  
+  "/signup",
+  upload.single("profilePic"),
+  userMiddleware.normalizeSkills,
+  userMiddleware.validateUserSignup,
+  userController.signupUser
+);
 
-  router.post(
-    "/login",
-    userMiddleware.validateUserLogin,
-    userController.loginUser
-  );
+// Login Route
+router.post(
+  "/login",
+  userMiddleware.validateUserLogin,
+  userController.loginUser
+);
 
-router.get("/profile", userMiddleware.authMe, userController.getUserProfile); // Example with auth
+// Update User Route
+router.put(
+  "/update",
+  userMiddleware.authMe,
+  upload.single("profilePic"),
+  userMiddleware.normalizeSkills,
+  userController.updateUser
+);
+
+router.get("/profile", userMiddleware.authMe, userController.getUserProfile);
 
 module.exports = router;
