@@ -3,21 +3,13 @@ const userController = require('../controllers/user.controller');
 const upload = require('../utils/multer'); // Multer middleware
 const userMiddleware = require('../middlewares/user.middleware'); // Validation middleware
 
-// Signup Route
-router.post(
-  "/signup",
-  upload.single("profilePic"),
-  userMiddleware.normalizeSkills,
-  userMiddleware.validateUserSignup,
-  userController.signupUser
-);
 
-// Login Route
-router.post(
-  "/login",
-  userMiddleware.validateUserLogin,
-  userController.loginUser
-);
+// Get user Profile
+router.get("/profile", userMiddleware.authMe, userController.getUserProfile);
+
+// Get all users
+router.get("/all", userMiddleware.authMe, userController.getAllUsers);
+
 
 // Update User Route
 router.put(
@@ -35,6 +27,5 @@ router.delete(
   userController.deleteUser
 );
 
-router.get("/profile", userMiddleware.authMe, userController.getUserProfile);
 
 module.exports = router;

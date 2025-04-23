@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const cors = require('cors');
+const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 
 
@@ -13,6 +14,7 @@ app.use(morgan('dev'));
 
 
 //routes
+app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 
 

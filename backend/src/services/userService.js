@@ -77,3 +77,10 @@ exports.deleteUser = async (userId) => {
 
   return deletedUser;
 }
+
+
+//get all users
+exports.getAllUsers = async () => {
+  const users = await userModel.find().select("-password -__v"); // Exclude password and __v field
+  return users;
+} 
