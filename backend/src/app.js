@@ -5,7 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const requestRoutes = require('./routes/request.routes');
-
+const connectionRoutes = require('./routes/connection.routes');
 
 //middleware
 app.use(cors());
@@ -18,6 +18,7 @@ app.use(morgan('dev'));
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/requests', requestRoutes);
+app.use('/api/v1/connections', connectionRoutes);
 
 
 
