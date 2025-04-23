@@ -3,6 +3,7 @@ import { ThemeProvider } from "./context/ThemeProvider";
 import NavBar from "./components/NavBar";
 import Approutes from "./routes/Approutes";
 import Footer from "./components/Footer";
+import { Toaster } from "./components/ui/sonner";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
             <Approutes />
         </div>
         <Footer/>
+        <Toaster />
       </ThemeProvider>
     </div>
   );
