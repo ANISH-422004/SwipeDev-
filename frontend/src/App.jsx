@@ -2,6 +2,7 @@ import React from "react";
 import { ThemeProvider } from "./context/ThemeProvider";
 import NavBar from "./components/NavBar";
 import Approutes from "./routes/Approutes";
+import Footer from "./components/Footer";
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
           {/* Routes  */}
             <Approutes />
         </div>
+        <Footer/>
       </ThemeProvider>
     </div>
   );
