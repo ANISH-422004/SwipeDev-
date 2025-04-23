@@ -11,7 +11,7 @@ module.exports.sendConnectionRequestController = async (req, res) => {
         }
 
         // Prevent sending request to self
-        if (userId === toUserId) {
+        if (userId.toString() === toUserId) {
             return res.status(400).json({ message: "You cannot send a request to yourself" });
         }
 
@@ -40,7 +40,7 @@ module.exports.respondToConnectionRequestController = async (req, res) => {
         const { requestId, status } = req.params; // Extract ConnectionRequestId and status from the request parameters
 
         //validate status
-        if (!["accepted", "rejected"].includes(status)) {
+        if (!["accept", "reject"].includes(status)) {
             return res.status(400).json({ message: "Invalid status" });
         }
 
