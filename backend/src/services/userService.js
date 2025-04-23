@@ -1,3 +1,4 @@
+const connectionRequestModel = require("../models/connectionRequest.model");
 const userModel = require("../models/user.model");
 
 // Create user
@@ -91,3 +92,34 @@ exports.findUserByEmail = async (email) => {
   if (!user) throw new Error("User not found");
   return user;
 }
+
+//get suggested user for feed
+module.exports.getSuggestedUsersForFeed = async (loggedInUserId) => {
+  const SAFE_USER_SELECT = "-password -__v -createdAt -updatedAt -profilePicFileId";
+
+  // Step 1: Find all sent/received connection requests involving the user
+  const connections = await connectionRequestModel.find({
+      $or: [
+          { senderId: loggedInUserId },
+          { receiverId: loggedInUserId }
+      ]
+  });
+
+  // Step 2: Build a Set of user IDs to exclude from the feed
+  const userToHide = new Set();
+  connections.forEach((item) => {
+      const otherUserId = item.senderId.toString() === loggedInUserId.toString()
+          ? item.receiverId.toString()
+          : item.senderId.toString();
+      userToHide.add(otherUserId);
+  });
+
+  // Step 3: Query users not in the block list and not the current user
+  const users = await userModel.find({
+      _id: {
+          $nin: [loggedInUserId, ...userToHide]
+      }
+  }).select(SAFE_USER_SELECT)
+
+  return users;
+};
