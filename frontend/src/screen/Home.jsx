@@ -23,12 +23,12 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-scree p-4">
+    <div className="min-h-screen p-4">
       <h1 className="text-2xl font-bold text-center mb-6">Swipe People</h1>
       {feed && feed.length > 0 ? (
         <SwipeDeck users={feed} />
       ) : (
-        <p className="text-center text-gray-500">Loading...</p>
+        <p className="text-center text-gray-500">No New Users For You on Feed </p>
       )}
     </div>
   );

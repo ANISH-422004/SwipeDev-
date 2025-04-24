@@ -61,7 +61,7 @@ const Requests = () => {
     }
 
 
-  console.log(requests)
+  (requests)
 
   return (
 <div className="flex flex-col items-center p-6">
@@ -102,7 +102,7 @@ const Requests = () => {
         </Card>
       ))
     ) : (
-      <p className="text-muted-foreground">No connection requests found.</p>
+      <p className="text-muted-foreground text-center mt-40">No connection requests found.</p>
     )}
   </div>
 </div>

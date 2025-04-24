@@ -14,11 +14,14 @@ export const feed = createSlice({
         updateFeed: (state, action) => {
         return action.payload
         },
+        removeUserFromFeed : (state, action) => {
+            return state.filter((user)=> user._id!==action.payload)
+        }
     },
 })
 
 
 // Action creators are generated for each case reducer function
-export const { addFeed, removeFeed, updateFeed } = feed.actions
+export const { addFeed, removeFeed, updateFeed ,removeUserFromFeed} = feed.actions
 
 export default feed.reducer

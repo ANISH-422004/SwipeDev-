@@ -1,18 +1,63 @@
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import UserCard from "./UserCard";
+import { toast } from "sonner";
+import { removeUserFromFeed } from "@/app/slices/feedSlice";
+import axiosInstance from "@/lib/axiosInstance";
 
-export default function SwipeDeck({ users }) {
-  const [userIndex, setUserIndex] = useState(0);
+export default function SwipeDeck() {
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.feed);
   const [isDragging, setIsDragging] = useState(false);
 
   const handleSwipe = (direction, user) => {
-    console.log(`Swiped ${direction}:`, user.firstName);
-    setUserIndex((prev) => prev + 1);
+
+    if (direction === "left") {
+      // ignored
+      axiosInstance
+        .post(`/api/v1/requests/send/ignored/${user._id}`)
+        .then((res) => {
+          if (res.status === 200) {
+            toast.error(`Rejected ${user.firstName}`);
+          } else {
+            toast.error("Failed to ignore user");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Error ignoring user");
+        })
+        .finally(() => {
+          dispatch(removeUserFromFeed(user._id));
+          setIsDragging(false); // hide zones
+        });
+    } else {
+      // intrested
+      axiosInstance
+        .post(`/api/v1/requests/send/intrested/${user._id}`)
+        .then((res) => {
+          if (res.status === 200) {
+            toast.success(`Accepted ${user.firstName}`);
+          } else {
+            toast.error("Failed to accept user");
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Error accepting user");
+        })
+        .finally(() => {
+          dispatch(removeUserFromFeed(user._id));
+          setIsDragging(false); // hide zones
+        });
+    }
+
+    dispatch(removeUserFromFeed(user._id));
     setIsDragging(false); // hide zones
   };
 
   return (
-    <div className="relative h-[500px] w-full max-w-md mx-auto mt-10">
+    <div className="relative h-[500px] w-full max-w-md mx-auto">
       {/* Swipe Zones */}
       {isDragging && (
         <>
@@ -30,9 +75,9 @@ export default function SwipeDeck({ users }) {
       )}
 
       {users
-        .slice(userIndex)
+        ?.slice()
         .reverse()
-        .map((user, index) => (
+        .map((user) => (
           <UserCard
             key={user._id}
             user={user}

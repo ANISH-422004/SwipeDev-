@@ -15,6 +15,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { removeUser } from "@/app/slices/userSlice";
 import { toast } from "sonner";
+import { clearConnections } from "@/app/slices/connectionsSlice";
+import { removeFeed } from "@/app/slices/feedSlice";
+import { clearRequests } from "@/app/slices/requestsSlice";
 
 const NavBar = () => {
   const { theme } = useContext(ThemeProviderContext);
@@ -73,6 +76,9 @@ const NavBar = () => {
                     onClick={() => {
                       localStorage.removeItem("token");
                       dispatch(removeUser());
+                      dispatch(clearConnections())
+                      dispatch(removeFeed())
+                      dispatch(clearRequests())
                       toast.success("Logout Successfull");
                       navigate("/");
                     }}
