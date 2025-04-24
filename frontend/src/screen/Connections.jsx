@@ -33,7 +33,7 @@ const Connections = () => {
     <div className="flex flex-col items-center h-screen p-6 overflow-hidden">
       <h1 className="text-2xl font-bold mb-4">Connections</h1>
 
-      <div className="flex flex-col items-center justify-center gap-4 overflow-x-auto w-full px-4 pb-4">
+      <div className="flex flex-col items-center justify-center gap-4 overflow-x-auto w-full px-4 py-52 border-2 pb-4">
         {connections && connections.length > 0 ? (
           connections.map((connection) => (
             <motion.div
@@ -43,7 +43,7 @@ const Connections = () => {
               transition={{ duration: 0.3 }}
               className="flex-shrink-0 w-full max-w-3xl"
             >
-              <Card className="shadow-sm hover:shadow-md transition-shadow duration-300">
+              <Card className="shadow-sm hover:shadow-md transition-shadow duration-300  w-[100%]">
                 <CardHeader className="flex flex-row items-center gap-4 p-4">
                   <img
                     src={connection.profilePic}
