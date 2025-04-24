@@ -59,7 +59,9 @@ const NavBar = () => {
                 <DropdownMenuContent>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/profile">Profile</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Subscription</DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {

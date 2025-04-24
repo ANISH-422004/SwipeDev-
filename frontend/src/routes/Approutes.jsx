@@ -5,6 +5,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "@/screen/Home";
 import SignUp from "@/screen/SignUp";
 import Protected from "@/components/Protected";
+import Profile from "@/screen/Profile";
 
 const Approutes = () => {
   return (
@@ -13,6 +14,8 @@ const Approutes = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/home" element={<Protected><Home /></Protected>} />
+      <Route path="/profile" element={<Protected><Profile /></Protected>} />
+
     </Routes>
   );
 };
