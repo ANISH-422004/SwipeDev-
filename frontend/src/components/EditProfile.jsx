@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
 import { Label } from '@radix-ui/react-dropdown-menu';
-import { Input } from '@/components/ui/Input';
-import  axiosInstance  from '../lib/axiosInstance';
+import { Input } from '@/components/ui/input';
+import axiosInstance from '../lib/axiosInstance';
 import { toast } from 'sonner';
-import { addUser } from '@/app/slices/userSlice';
 
 const EditProfile = ({ isOpen, onOpenChange, user, onUpdate }) => {
   const [loading, setLoading] = useState(false);
