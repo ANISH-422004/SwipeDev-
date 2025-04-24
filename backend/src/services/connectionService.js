@@ -5,7 +5,7 @@ const connectionRequestModel = require("../models/connectionRequest.model");
 module.exports.getPendingConnections = async (userId) => {
     try {
         // Assuming you have a Connection model to interact with your database
-        const connections = await connectionRequestModel.find({ receiverId: userId, status: "intrested" }).populate('senderId', "firstName lastName email age gender profilePic"); // Populate with user details
+        const connections = await connectionRequestModel.find({ receiverId: userId, status: "intrested" }).populate('senderId', "firstName lastName email about age gender profilePic"); // Populate with user details
 
         return connections;
     } catch (error) {
@@ -28,8 +28,8 @@ module.exports.getConnections = async (userId) => {
             { status: "accept" } // Ensure status is "accept"
         ]
     })
-    .populate('senderId', "_id firstName lastName email age gender profilePic")
-    .populate('receiverId', "_id firstName lastName email age gender profilePic");
+    .populate('senderId', "_id firstName lastName email about age gender profilePic")
+    .populate('receiverId', "_id firstName lastName email about age gender profilePic");
 
 
         
