@@ -1,10 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import userReducer, { user } from './slices/userSlice'
-
+import userReducer from './slices/userSlice'
+import feedReducer from './slices/feedSlice'
 
 export const store = configureStore({
   reducer: {
     user: userReducer,
+    feed: feedReducer,
   },
 })
 
