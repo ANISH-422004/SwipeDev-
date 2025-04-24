@@ -32,13 +32,33 @@ const Requests = () => {
     getConnectionRequests();
   }, []);
 
-  const handleAccept = (id) => {
-    toast.success(`Accepted request for ID: ${id}`);
-  };
 
-  const handleReject = (id) => {
-    toast.success(`Rejected request for ID: ${id}`);
-  };
+    const handelReview = async (action, requestId) => {
+        // if(action === "accept"){toast.success("Connection request accepted" + requestId)}
+        // else{toast.error("Connection request rejected " + requestId)}
+
+        try {
+            
+            const res = await axiosInstance.post(`/api/v1/requests/review/${action}/${requestId}`);
+            if (res.status === 200) {
+                toast.success("Connection request " + action + "ed successfully");
+                // remove that request from store
+                dispatch(setRequests(requests.filter((req) => req._id !== requestId)));
+                
+            } else {
+                toast.error("Failed to update connection request status");
+            }
+
+
+
+            
+        } catch (error) {
+            toast.error("Error updating connection request status");
+            console.error("Error updating connection request status:", error);
+        }    
+
+
+    }
 
 
   console.log(requests)
@@ -72,10 +92,10 @@ const Requests = () => {
           </CardContent>
 
           <CardFooter className="flex justify-end gap-2 px-2 py-2">
-            <Button variant="outline" size="sm" onClick={() => handleReject(req._id)}>
+            <Button variant="outline" size="sm" onClick={() => handelReview("reject", req._id)}>
               Reject
             </Button>
-            <Button size="sm" onClick={() => handleAccept(req._id)}>
+            <Button size="sm" onClick={() => handelReview("accept", req._id)}>
               Accept
             </Button>
           </CardFooter>
