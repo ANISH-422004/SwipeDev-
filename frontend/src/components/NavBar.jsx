@@ -62,6 +62,12 @@ const NavBar = () => {
                   <DropdownMenuItem>
                     <Link to="/profile">Profile</Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/connections">connections</Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link to="/requests">Match Requests</Link>
+                  </DropdownMenuItem>
                   <DropdownMenuItem>Subscription</DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {

@@ -6,6 +6,8 @@ import Home from "@/screen/Home";
 import SignUp from "@/screen/SignUp";
 import Protected from "@/components/Protected";
 import Profile from "@/screen/Profile";
+import Connections from "@/screen/Connections";
+import Requests from "@/screen/Requests";
 
 const Approutes = () => {
   return (
@@ -15,6 +17,8 @@ const Approutes = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/home" element={<Protected><Home /></Protected>} />
       <Route path="/profile" element={<Protected><Profile /></Protected>} />
+      <Route path="/connections" element={<Protected><Connections/></Protected>} />
+      <Route path="/requests" element={<Protected><Requests/></Protected>} />
 
     </Routes>
   );
