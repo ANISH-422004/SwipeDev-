@@ -2,9 +2,21 @@ import React, { useContext } from "react";
 import { ThemeProviderContext } from "../context/ThemeProvider";
 import { ModeToggle } from "./mode-toggle";
 import logo from "../assets/logo.svg";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { LogIn } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const NavBar = () => {
   const { theme } = useContext(ThemeProviderContext);
-
+  const user = useSelector((state) => state.user);
   return (
     <div
       className="fixed top-0 left-0 w-full z-50 p-4"
@@ -25,20 +37,38 @@ const NavBar = () => {
       }}
     >
       <div className="flex justify-between items-center">
-        <div className="flex items-center space-x-4">
+        <Link to="/home" className="flex items-center space-x-4">
           <img src={logo} alt="Logo" className="h-10 w-10" />
-          {/* <div className="text-2xl font-bold">My Logo</div> */}
-        </div>
+        </Link>
         <div className="flex space-x-6">
-          <a href="#" className="hover:text-[var(--accent-foreground)]">
-            Home
-          </a>
-          <a href="#" className="hover:text-[var(--accent-foreground)]">
-            About
-          </a>
-          <a href="#" className="hover:text-[var(--accent-foreground)]">
-            Services
-          </a>
+          <div className="flex justify-center items-center">
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger>
+                  {" "}
+                  <img
+                    src={user.profilePic}
+                    alt="User Avatar"
+                    className="w-8 h-8 rounded-full shadow-md ring-1 ring-white hover:scale-105 transition-transform duration-300"
+                  />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem>Profile</DropdownMenuItem>
+                  <DropdownMenuItem>Billing</DropdownMenuItem>
+                  <DropdownMenuItem>Team</DropdownMenuItem>
+                  <DropdownMenuItem>Subscription</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/login" className="flex items-center space-x-2">
+                <LogIn className="w-5 h-5" />
+                <span>Login</span>
+              </Link>
+            )}
+          </div>
+
           <ModeToggle />
         </div>
       </div>

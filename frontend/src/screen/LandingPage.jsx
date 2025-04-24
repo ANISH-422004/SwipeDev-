@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 // import { Card, CardContent } from '@/components/ui/card';
 import { Button } from "../components/ui/button";
 import { FaGithub, FaHeart } from "react-icons/fa";
+import axiosInstance from "@/lib/axiosInstance";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "@/app/slices/userSlice";
 
 const developers = [
   { name: "Alice", tech: "React, Node.js", image: "/dev1.png" },
@@ -11,6 +14,24 @@ const developers = [
 ];
 
 const LandingPage = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user); 
+
+  useEffect(() => { // logic if user has a token then auto Login and store that user data in Store 
+    const token = localStorage.getItem("token");
+
+    if (!token || user) return; 
+
+    axiosInstance
+      .get("/api/v1/users/profile")
+      .then((res) => {
+        dispatch(addUser(res.data.user)); 
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+  }, []);
+
   return (
     <div className=" min-h-screen flex flex-col items-center justify-between">
       {/* Hero Section */}
@@ -51,8 +72,6 @@ const LandingPage = () => {
           </motion.div>
         ))}
       </section> */}
-
-
     </div>
   );
 };
