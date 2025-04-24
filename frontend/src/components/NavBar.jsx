@@ -2,8 +2,8 @@ import React, { useContext } from "react";
 import { ThemeProviderContext } from "../context/ThemeProvider";
 import { ModeToggle } from "./mode-toggle";
 import logo from "../assets/logo.svg";
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { LogIn } from "lucide-react";
 import {
   DropdownMenu,
@@ -13,10 +13,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { removeUser } from "@/app/slices/userSlice";
+import { toast } from "sonner";
 
 const NavBar = () => {
   const { theme } = useContext(ThemeProviderContext);
   const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   return (
     <div
       className="fixed top-0 left-0 w-full z-50 p-4"
@@ -56,9 +60,18 @@ const NavBar = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Billing</DropdownMenuItem>
-                  <DropdownMenuItem>Team</DropdownMenuItem>
                   <DropdownMenuItem>Subscription</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      dispatch(removeUser());
+                      toast.success("Logout Successfull");
+                      navigate("/");
+                    }}
+                    className="bg-red-500 text-white  active:bg-red-700"
+                  >
+                    Logout
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (

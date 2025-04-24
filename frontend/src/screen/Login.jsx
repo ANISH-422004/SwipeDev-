@@ -12,8 +12,8 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState([]);
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const handelLogin = async (e) => {
@@ -28,14 +28,16 @@ const Login = () => {
       toast.success("Login Successfull");
       dispatch(addUser(res.data.user));
       navigate("/home");
-      console.log(res);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
+      setErrors(error.response.data.errors);
       toast.error("Login Failed");
     } finally {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[50vh]">
@@ -63,6 +65,16 @@ const Login = () => {
           id="password"
           placeholder="password"
         />
+
+        {/* Errors */}
+        {errors.length > 0 && (
+          <div className="text-red-500 text-sm mt-2">
+            {errors.map((error, index) => (
+              <p className="text-center" key={index}>{error.msg || error}</p>
+            ))}
+          </div>
+        )}
+
         <Button onClick={handelLogin} className="w-[50%] mt-2" type="submit">
           Login
         </Button>
