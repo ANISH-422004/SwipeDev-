@@ -77,7 +77,7 @@ const SignUp = () => {
       console.log('FormData:', formData.skills);
 
       
-      const res = await axiosInstance.post('http://localhost:3000/api/v1/auth/signup', formData);
+      const res = await axiosInstance.post('/api/v1/auth/signup', formData);
 
 
       if (res.status === 201) {
