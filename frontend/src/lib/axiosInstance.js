@@ -1,8 +1,9 @@
 
 import axios from "axios";
+import { VITE_BASE_URL } from "./constants";
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_BASE_URL, // Use VITE_ prefix for Vite projects
+  baseURL: VITE_BASE_URL, // Use VITE_ prefix for Vite projects
   headers: {
     "Content-Type": "application/json",
   },
