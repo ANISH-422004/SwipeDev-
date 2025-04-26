@@ -1,6 +1,3 @@
-const { set } = require("../app");
-const connectionRequestModel = require("../models/connectionRequest.model");
-const userModel = require("../models/user.model");
 const { getPendingConnections, getConnections } = require("../services/connectionService");
 const { getSuggestedUsersForFeed } = require("../services/userService");
 

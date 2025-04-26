@@ -1,10 +1,12 @@
 const { checkifConnectionRequestExists, createConnectionRequest, findRequestByIdandReciverId, updateRequestStatus } = require("../services/RequestService");
 
+const sendEmail = require("../utils/sendEmail");
+
 module.exports.sendConnectionRequestController = async (req, res) => {
     try {
         const { status, toUserId } = req.params;
-        const { _id: userId } = req.user; 
-        
+        const { _id: userId } = req.user;
+
         // Validate status
         if (!["ignored", "intrested"].includes(status)) {
             return res.status(400).json({ message: "Invalid status" });
@@ -24,6 +26,19 @@ module.exports.sendConnectionRequestController = async (req, res) => {
         // Create new connection request
         const connectionRequest = await createConnectionRequest(userId, toUserId, status);
 
+
+        if (status === "intrested") {
+            const Subject = "New  Dev Connection Request";
+            const HTML = `<h1>New Connection Request</h1><p>${userId} has sent you a connection request.</p>`;
+            const Text = `New Connection Request: ${userId} has sent you a connection request.`;
+
+            const emailRes = sendEmail.run(Subject , HTML , Text );
+            console.log(emailRes);
+        }
+
+
+
+
         return res.status(200).json({ message: "Connection request sent successfully", connectionRequest });
 
     } catch (error) {
@@ -36,7 +51,7 @@ module.exports.sendConnectionRequestController = async (req, res) => {
 
 module.exports.respondToConnectionRequestController = async (req, res) => {
     try {
-        const  loginUserId  = req.user._id; // Get the logged-in user's ID from the request object
+        const loginUserId = req.user._id; // Get the logged-in user's ID from the request object
         const { requestId, status } = req.params; // Extract ConnectionRequestId and status from the request parameters
 
         //validate status
@@ -45,9 +60,9 @@ module.exports.respondToConnectionRequestController = async (req, res) => {
         }
 
         // Check if the requestId is valid and belongs to the logged-in user
-        const iftheRequestExists = await findRequestByIdandReciverId(requestId , loginUserId);
+        const iftheRequestExists = await findRequestByIdandReciverId(requestId, loginUserId);
 
-        if(!iftheRequestExists) {
+        if (!iftheRequestExists) {
             return res.status(400).json({ message: "Connection request not found or does not belong to you" });
         }
 

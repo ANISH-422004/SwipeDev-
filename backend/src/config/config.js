@@ -7,6 +7,8 @@ const _config = {
     IMAGEKIT_URL_ENDPOINT: process.env.IMAGEKIT_URL_ENDPOINT,
     EMAIL_USER: process.env.EMAIL_USER,
     EMAIL_PASS: process.env.EMAIL_PASS,
+    AMAZONE_SES_SECRETKEY: process.env.AMAZONE_SES_SECRETKEY,
+    AMAZONE_SES_ACCESSKEY: process.env.AMAZONE_SES_ACCESSKEY,
 }
 
 const config = Object.freeze(_config)

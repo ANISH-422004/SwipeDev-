@@ -1,7 +1,5 @@
 const { deleteImage, uploadBufferStream } = require("../utils/imagekit");
 const { updateUser, deleteUser, getAllUsers, findUserByEmail } = require("../services/userService");
-const { sendEmail } = require("../utils/nodeMailer");
-const userModel = require("../models/user.model");
 
 
 
@@ -92,67 +90,6 @@ module.exports.getAllUsers = async (req, res) => {
 }
 
 
-module.exports.forgotPassword = async (req, res) => {
-  try {
-    const { email } = req.body;
-    const user = await findUserByEmail(email);
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    console.log(user)
-    // Generate a password reset token and send it to the user's email
-    const token = user.generatePasswordResetToken();
-    user.passwordResetToken = token;
-    await user.save();
-
-    // Send email logic here (using nodemailer or any other service)
-    //password resetlink should be sent to the user email
-
-    const resetLink = `${req.protocol}://${req.get("host")}/api/auth/reset-password/${token}`;
-    console.log("Password reset link:", resetLink);
-    // You can use a service like nodemailer to send the email
-    await sendEmail({
-      to: user.email,
-      subject: "Password Reset",
-      htmlContent: `
-      <body style="background-color: #000; color: #fff;">
-      <p style="color: #fff;">Click the link below to reset your password:</p>
-      <a href="${resetLink}" style="color: #007bff; text-decoration: none;">Reset Password</a>
-      <p style="color: #fff;">If you did not request this, please ignore this email.</p>
-      <p style="color: #fff;">Thank you!</p>
-      <p style="color: #fff;">Best regards,</p>
-      </body>
-      `,
-    });
-    // Uncomment the following line to send the email using your email service
-
-    // await sendPasswordResetEmail(user.email, token);
-
-    res.status(200).json({ message: "Password reset link sent to your email" });
-  } catch (error) {
-    console.error("Error in forgot password:", error);
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
-  }
-}
 
 
-module.exports.resetPassword = async (req, res) => {
-  try {
-    console.log(req.body)
-    const { token, newPassword } = req.body;
-    const user = await userModel.findOne({ passwordResetToken: token });
-    if (!user) {
-      return res.status(404).json({ message: "Invalid or expired token" });
-    }
 
-    user.password = newPassword;
-    user.passwordResetToken = undefined; // Clear the token after use
-    await user.save();
-
-    res.status(200).json({ message: "Password reset successfully" });
-  } catch (error) {
-    console.error("Error in reset password:", error.message);
-    res.status(500).json({ message: "Internal Server Error", error: error.message });
-  }
-}

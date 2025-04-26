@@ -27,18 +27,7 @@ router.delete(
   userController.deleteUser
 );
 
-//forgot password route
-router.post(
-  "/forgot-password",
-  userMiddleware.authMe,
-  userController.forgotPassword
-);
 
-//reset password route
-router.post(
-  "/reset-password",
-  userController.resetPassword
-);
 
 
 module.exports = router;
