@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const requestRoutes = require('./routes/request.routes');
 const connectionRoutes = require('./routes/connection.routes');
+const cronJob = require('./utils/CronJob');
 
 //middleware
 app.use(cors());
