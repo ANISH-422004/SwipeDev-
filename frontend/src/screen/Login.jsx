@@ -67,7 +67,7 @@ const Login = () => {
         />
 
         {/* Errors */}
-        {errors.length > 0 && (
+        {errors?.length > 0 && (
           <div className="text-red-500 text-sm mt-2">
             {errors.map((error, index) => (
               <p className="text-center" key={index}>{error.msg || error}</p>
