@@ -88,7 +88,14 @@ exports.getAllUsers = async () => {
 
 // find user by email
 exports.findUserByEmail = async (email) => {
-  const user = await userModel.findOne({ email });
+  const user = await userModel.findOne({ email }).select("-password -__v");
+  if (!user) throw new Error("User not found");
+  return user;
+}
+
+// find user by id
+exports.findUserById = async (userId) => {
+  const user = await userModel.findById(userId).select("-password -__v");
   if (!user) throw new Error("User not found");
   return user;
 }

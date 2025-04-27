@@ -1,7 +1,7 @@
-const { SendEmailCommand } =  require( "@aws-sdk/client-ses");
-const { sesClient } =  require( "./sesClient.js");
+const { SendEmailCommand } = require("@aws-sdk/client-ses");
+const { sesClient } = require("./sesClient.js");
 
-const createSendEmailCommand = (toAddress, fromAddress,subject , HTMl , Text) => {
+const createSendEmailCommand = (toAddress, fromAddress, subject, HTMl, Text) => {
     return new SendEmailCommand({
         Destination: {
             /* required */
@@ -38,9 +38,9 @@ const createSendEmailCommand = (toAddress, fromAddress,subject , HTMl , Text) =>
     });
 };
 
-const run = async (subject, HTMl, Text) => {
+const run = async (sendEmailTo, subject, HTMl, Text) => {
     const sendEmailCommand = createSendEmailCommand(
-        "anishbhattacharya422004@gmail.com",
+        sendEmailTo,
         "SwipeDev@spwipedev.xyz",
         subject, HTMl, Text
     );

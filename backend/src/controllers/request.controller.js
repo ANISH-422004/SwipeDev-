@@ -1,11 +1,11 @@
 const { checkifConnectionRequestExists, createConnectionRequest, findRequestByIdandReciverId, updateRequestStatus } = require("../services/RequestService");
-
+const { findUserById } = require("../services/userService");
 const sendEmail = require("../utils/sendEmail");
 
 module.exports.sendConnectionRequestController = async (req, res) => {
     try {
         const { status, toUserId } = req.params;
-        const { _id: userId } = req.user;
+        const { firstName , _id: userId } = req.user;
 
         // Validate status
         if (!["ignored", "intrested"].includes(status)) {
@@ -27,14 +27,34 @@ module.exports.sendConnectionRequestController = async (req, res) => {
         const connectionRequest = await createConnectionRequest(userId, toUserId, status);
 
 
+        //get the reciver user data to send email
+        // const reciverUser  = await findUserById(toUserId);
+
         if (status === "intrested") {
             const Subject = "New  Dev Connection Request";
-            const HTML = `<h1>New Connection Request</h1><p>${userId} has sent you a connection request.</p>`;
-            const Text = `New Connection Request: ${userId} has sent you a connection request.`;
-
-            const emailRes = sendEmail.run(Subject , HTML , Text );
-            console.log(emailRes);
+            const HTML = `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h1 style="color: #4CAF50;">New Connection Request</h1>
+                    <p>Hi there,</p>
+                    <p><strong>${firstName}</strong> has sent you a connection request on DevConnect!</p>
+                    <p style="background-color: #f9f9f9; padding: 10px; border-left: 4px solid #4CAF50;">
+                        <em>"Connecting developers, one request at a time."</em>
+                    </p>
+                    <p>Click the button below to view and respond to the request:</p>
+                    <a href="https://spwipedev.xyz" 
+                       style="display: inline-block; padding: 10px 20px; color: #fff; background-color: #4CAF50; text-decoration: none; border-radius: 5px;">
+                        View Request
+                    </a>
+                    <p style="margin-top: 20px;">Thank you for using DevConnect!</p>
+                </div>
+            `;
+            const Text = `New Connection Request: ${firstName} has sent you a connection request.`;
+            const sendEmailTo = "anishbhattacharya422004@gmail.com";
+            const emailRes = await sendEmail.run(sendEmailTo ,  Subject , HTML , Text );
+        
+        
         }
+
 
 
 
@@ -69,6 +89,26 @@ module.exports.respondToConnectionRequestController = async (req, res) => {
         // Update the status of the connection request and if not updated handeled in function
 
         const updatedRequest = await updateRequestStatus(requestId, status);
+
+        //send email to the sender of the request if accepted
+        if (status === "accept") {
+            const Subject = "Connection Request Accepted";
+            const HTML = `
+                <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                    <h1 style="color: #4CAF50;">Connection Request Accepted</h1>
+                    <p>Hi there,</p>
+                    <p>Your connection request has been accepted!</p>
+                    <p style="background-color: #f9f9f9; padding: 10px; border-left: 4px solid #4CAF50;">
+                        <em>"Connecting developers, one request at a time."</em>
+                    </p>
+                    <p>Thank you for using DevConnect!</p>
+                </div>
+            `;
+            const Text = `Your connection request has been accepted.`;
+            const sendEmailTo = "anishbhattacharya422004@gmail.com";
+
+            const emailRes = await sendEmail.run(sendEmailTo ,  Subject , HTML , Text );
+        }
 
 
         return res.status(200).json({ message: "Connection request updated successfully", updatedRequest });
