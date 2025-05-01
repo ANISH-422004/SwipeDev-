@@ -6,6 +6,7 @@ const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const requestRoutes = require('./routes/request.routes');
 const connectionRoutes = require('./routes/connection.routes');
+const chatRoutes = require('./routes/chat.routes');
 const cronJob = require('./utils/CronJob');
 
 //middleware
@@ -20,6 +21,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/requests', requestRoutes);
 app.use('/api/v1/connections', connectionRoutes);
+app.use('/api/v1/chat', chatRoutes);
 
 
 
