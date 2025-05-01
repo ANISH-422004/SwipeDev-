@@ -8,6 +8,7 @@ import Protected from "@/components/Protected";
 import Profile from "@/screen/Profile";
 import Connections from "@/screen/Connections";
 import Requests from "@/screen/Requests";
+import Chat from "@/screen/Chat";
 
 const Approutes = () => {
   return (
@@ -19,7 +20,7 @@ const Approutes = () => {
       <Route path="/profile" element={<Protected><Profile /></Protected>} />
       <Route path="/connections" element={<Protected><Connections/></Protected>} />
       <Route path="/requests" element={<Protected><Requests/></Protected>} />
-
+      <Route path="/chat/:targetuserId" element={<Protected><Chat /></Protected>} />
     </Routes>
   );
 };

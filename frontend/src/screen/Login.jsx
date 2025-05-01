@@ -29,7 +29,7 @@ const Login = () => {
       dispatch(addUser(res.data.user));
       navigate("/home");
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
       setErrors(error.response.data.errors);
       toast.error("Login Failed");
     } finally {

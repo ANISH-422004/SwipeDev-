@@ -63,6 +63,14 @@ const Connections = () => {
                 <CardContent className="text-sm text-muted-foreground px-4 pb-4 pt-0">
                   {connection.about || "No description provided."}
                 </CardContent>
+                <div className="px-4 pb-4">
+                  <a
+                    href={`/chat/${connection._id}`}
+                    className="text-blue-500 hover:underline text-sm"
+                  >
+                    Chat
+                  </a>
+                </div>
               </Card>
             </motion.div>
           ))
